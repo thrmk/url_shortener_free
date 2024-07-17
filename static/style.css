@@ -1,0 +1,36 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    font-weight: bold;
+}
+
+.container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #e9ecef;
+}
+
+.btn-link {
+    color: #dc3545;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
