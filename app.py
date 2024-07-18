@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime, timedelta
 from hashids import Hashids
-from flask import Flask, render_template, request, flash, redirect, url_for, session, g, Response, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, url_for, session, g, Response, send_from_directory, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def init_db():
@@ -243,6 +243,26 @@ def sitemap():
     sitemap_xml = render_template('sitemap.xml', urls=static_urls)
     response = Response(sitemap_xml, content_type='application/xml')
     return response
+
+@app.route('/allurls', methods=['GET'])
+def allurls():
+    conn = get_db_connection()
+    
+    # Fetch all URLs
+    urls = conn.execute('SELECT * FROM urls').fetchall()
+
+    # Fetch all users
+    users = conn.execute('SELECT * FROM users').fetchall()
+
+    conn.close()
+
+    # Prepare response
+    response_data = {
+        'urls': [dict(url) for url in urls],
+        'users': [dict(user) for user in users]
+    }
+
+    return jsonify(response_data)
 
 @app.route('/robots.txt', methods=['GET'])
 def robots_txt():
