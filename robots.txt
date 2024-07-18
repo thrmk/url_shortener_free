@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://url-shortener-free.onrender.com/sitemap.xml
