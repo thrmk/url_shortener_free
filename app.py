@@ -238,6 +238,7 @@ def sitemap():
         {'loc': url_for('logout', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('shorten', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('stats', _external=True), 'lastmod': datetime.now()},
+        {'loc': url_for('robots.txt', _external=True), 'lastmod': datetime.now()},
     ]
 
     sitemap_xml = render_template('sitemap.xml', urls=static_urls)
