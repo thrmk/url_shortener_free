@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime, timedelta
 from hashids import Hashids
-from flask import Flask, render_template, request, flash, redirect, url_for, session, g
+from flask import Flask, render_template, request, flash, redirect, url_for, session, g, Response, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def init_db():
@@ -228,6 +228,25 @@ def delete_url(id):
         flash('Invalid URL ID!')
 
     return redirect(url_for('stats'))
+
+@app.route('/sitemap.xml', methods=['GET'])
+def sitemap():
+    static_urls = [
+        {'loc': url_for('home', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+        {'loc': url_for('register', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+        {'loc': url_for('login', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+        {'loc': url_for('logout', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+        {'loc': url_for('shorten', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+        {'loc': url_for('stats', _external=True), 'lastmod': datetime.datetime.now().strftime('%Y-%m-%d')},
+    ]
+
+    sitemap_xml = render_template('sitemap.xml', urls=static_urls)
+    response = Response(sitemap_xml, content_type='application/xml')
+    return response
+
+@app.route('/robots.txt', methods=['GET'])
+def robots_txt():
+    return send_from_directory(app.root_path, 'robots.txt')
 
 # if __name__ == '__main__':
 #     app.run(host="0.0.0.0",port=5000)
