@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Our URL Shortener Service</h1>
+<p>Manage and track your links with ease using our platform, which offers features similar to bitly, tinyurl, and more.</p>
+
+{% if g.user %}
+    <p>Welcome back! Use the navigation above to manage your links and view your stats.</p>
+    <a href="{{ url_for('shorten') }}" class="btn btn-primary">Shorten a URL</a>
+    <a href="{{ url_for('stats') }}" class="btn btn-secondary">View Stats</a>
+{% else %}
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-secondary">Register</a>
+{% endif %}
+
+<!-- High Volume Keywords Section -->
+<div class="mt-4">
+    <h2>Why Use Our URL Shortener?</h2>
+    <p>Our platform offers a range of features to make link management easy and efficient. Whether you're using it for personal or business purposes, our URL shortener can help you streamline your digital presence. Here are some reasons to choose our service:</p>
+    <ul>
+        <li><strong>Bitly-like Features:</strong> Similar to Bitly, our service allows you to shorten long URLs into manageable links.</li>
+        <li><strong>Uniform Resource Locator (URL):</strong> Easily manage your uniform resource locator links and keep track of their performance.</li>
+        <li><strong>TinyURL Alternative:</strong> Use our tiny URL feature to create short links that are easy to share.</li>
+        <li><strong>Domain Management:</strong> Manage and track your domains efficiently with our integrated tools.</li>
+        <li><strong>Link to QR Code:</strong> Convert your links into QR codes for easy scanning and sharing.</li>
+        <li><strong>Broken Link Checker:</strong> Ensure all your links are active and working with our broken link checker tool.</li>
+    </ul>
+    <p>By using our platform, you can enjoy a seamless experience in managing and sharing links. Try our URL shortener today and see the difference!</p>
+</div>
+
+{% endblock %}

@@ -60,9 +60,7 @@ def load_logged_in_user():
 
 @app.route('/')
 def home():
-    if g.user is None:
-        return redirect(url_for('login'))
-    return redirect(url_for('shorten'))
+    return render_template('home.html')
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
@@ -232,7 +230,7 @@ def delete_url(id):
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
     static_urls = [
-        {'loc': url_for('home', _external=True), 'lastmod': datetime.now()},
+        {'loc': url_for('/', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('register', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('login', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('logout', _external=True), 'lastmod': datetime.now()},

@@ -30,16 +30,38 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('shorten') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('shorten') }}">Shorten URL</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
             </li>
+            {% if g.user %}
             <li class="nav-item">
                 <form method="post" action="{{ url_for('logout') }}" style="display:inline;">
                     <button type="submit" class="btn btn-link nav-link">Logout</button>
                 </form>
             </li>
+            {% else %}
+                {% if request.endpoint == 'login' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                </li>
+                {% elif request.endpoint == 'register' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                </li>
+                {% endif %}
+            {% endif %}
         </ul>
     </div>
 </nav>
