@@ -16,6 +16,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="google-site-verification" content="DuTmX4L2l2t61zV3fS7WtjJfAkYoi-TrbwxQlh0kk9I" />
+    <meta name="description" content="URL shortener and link management platform offering various features like bitly, tinyurl, and more. Manage and track your links effortlessly.">
+    <meta name="keywords" content="bitly, url, uniform resource locator, url shortener, tinyurl, domains, link to qr code, link shortener, bitly link, broken link checker, short link generator, url full form, google domain search, check domain registration, canonical link, redirect checker">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
@@ -47,6 +50,24 @@
         <div class="alert alert-{{ message[0] }}">{{ message[1] }}</div>
     {% endfor %}
     {% block content %} {% endblock %}
+</div>
+
+<!-- High Volume Keywords Section -->
+<div class="container mt-4">
+    <h2>Popular Keywords</h2>
+    <ul>
+        <li>bitly</li>
+        <li>url</li>
+        <li>uniform resource locator</li>
+        <li>url shortener</li>
+        <li>tinyurl</li>
+        <li>domains</li>
+        <li>link to qr code</li>
+        <li>link shortener</li>
+        <li>bitly link</li>
+        <li>broken link checker</li>
+        <!-- Add more keywords as needed -->
+    </ul>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
