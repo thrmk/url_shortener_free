@@ -230,7 +230,7 @@ def delete_url(id):
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
     static_urls = [
-        {'loc': url_for('/', _external=True), 'lastmod': datetime.now()},
+        {'loc': url_for('home', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('register', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('login', _external=True), 'lastmod': datetime.now()},
         {'loc': url_for('logout', _external=True), 'lastmod': datetime.now()},
