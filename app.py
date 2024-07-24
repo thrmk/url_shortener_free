@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, flash, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, Response, send_from_directory
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashids import Hashids
@@ -135,6 +135,21 @@ def delete_url(id):
     conn.close()
     flash('URL deleted successfully.')
     return redirect(url_for('stats'))
+
+def get_urls():
+    conn = get_db_connection()
+    urls = conn.execute('SELECT * FROM urls').fetchall()
+    conn.close()
+    return urls
+
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory(app.static_folder, 'robots.txt')
+
+@app.route('/all_urls')
+def all_urls():
+    urls = get_urls()
+    return render_template('all_urls.html', urls=urls, hashids=hashids)
 
 def get_urls():
     conn = get_db_connection()

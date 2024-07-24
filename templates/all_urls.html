@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}All URLs{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">All Shortened URLs</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            <th>Created</th>
+            <th>Expiry</th>
+            <th>Clicks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for url in urls %}
+        <tr>
+            <td><a href="{{ url_for('redirect_url', short_url=url.short_url, _external=True) }}">{{ url_for('redirect_url', short_url=url.short_url, _external=True) }}</a></td>
+            <td>{{ url.original_url }}</td>
+            <td>{{ url.created }}</td>
+            <td>{{ url.expiry }}</td>
+            <td>{{ url.clicks }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
