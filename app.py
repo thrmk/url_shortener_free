@@ -142,5 +142,5 @@ def get_urls():
     conn.close()
     return urls
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
