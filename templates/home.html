@@ -3,8 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
+<div class="jumbotron text-center">
     <h1 class="display-4">Welcome to Our URL Shortener Service</h1>
     <p class="lead">Manage and track your links with ease using our platform, which offers features similar to bitly, tinyurl, and more.</p>
+    <a class="btn btn-primary btn-lg mt-4" href="{{ url_for('index') }}" role="button">
+        Click Here <i class="fas fa-arrow-down animated-icon"></i>
+    </a>
 </div>
 {% endblock %}

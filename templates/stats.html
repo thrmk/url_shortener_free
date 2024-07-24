@@ -24,11 +24,11 @@
                 <td>{{ url.id }}</td>
                 <td>{{ url.created }}</td>
                 <td>{{ url.original_url }}</td>
-                <td><a href="{{ url.short_url }}">{{ url.short_url }}</a></td>
+                <td><a href="{{ url_for('redirect_url', short_url=url.short_url) }}">{{ url.short_url }}</a></td>
                 <td>{{ url.clicks }}</td>
                 <td>{{ url.expiry }}</td>
                 <td>
-                    <form method="POST" action="{{ url_for('delete_url', id=hashids.encode(url.id)) }}">
+                    <form method="POST" action="{{ url_for('delete_url', id=url.id) }}">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>            
