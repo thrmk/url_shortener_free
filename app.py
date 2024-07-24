@@ -73,7 +73,6 @@ def index():
 
     return render_template('index.html', expiry=default_expiry_str)
 
-
 @app.route('/<short_url>')
 def redirect_url(short_url):
     conn = get_db_connection()
