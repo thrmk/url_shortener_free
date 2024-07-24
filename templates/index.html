@@ -3,21 +3,20 @@
 {% block title %} Welcome to FlaskShortener {% endblock %}
 
 {% block content %}
-    <h1>Welcome to FlaskShortener</h1>
-    
-    <form method="post">
-        <div class="form-group">
-            <label for="url">URL</label>
-            <input type="text" name="url" placeholder="URL to shorten" class="form-control" value="{{ request.form['url'] }}" autofocus>
-        </div>
+<h1 class="mb-4">Welcome to FlaskShortener</h1>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
+<form method="post" class="form-inline">
+    <div class="form-group mb-2">
+        <label for="url" class="sr-only">URL</label>
+        <input type="text" name="url" id="url" placeholder="URL to shorten" class="form-control mr-2" value="{{ request.form['url'] }}" autofocus>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
 
-    {% if short_url %}
-    <hr>
-    <span>{{ short_url }}</span>
-    {% endif %}
+{% if short_url %}
+<hr>
+<div class="alert alert-success" role="alert">
+    Shortened URL: <a href="{{ short_url }}" class="alert-link">{{ short_url }}</a>
+</div>
+{% endif %}
 {% endblock %}

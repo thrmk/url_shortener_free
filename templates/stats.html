@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} URL Statistics {% endblock %}
+{% block title %}URL Statistics{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -15,7 +15,6 @@
                 <th>Short URL</th>
                 <th>Clicks</th>
                 <th>Expiry</th>
-                <th>Username</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -28,7 +27,6 @@
                 <td><a href="{{ url.short_url }}">{{ url.short_url }}</a></td>
                 <td>{{ url.clicks }}</td>
                 <td>{{ url.expiry }}</td>
-                <td>{{ url.username }}</td>
                 <td>
                     <form method="POST" action="{{ url_for('delete_url', id=hashids.encode(url.id)) }}">
                         <button type="submit" class="btn btn-danger">Delete</button>
