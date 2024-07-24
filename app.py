@@ -144,7 +144,7 @@ def get_urls():
 
 @app.route('/robots.txt', methods=['GET','POST'])
 def robots_txt():
-    return send_from_directory(app.static_folder, 'robots.txt')
+    return send_from_directory(app.root_path, 'robots.txt')
 
 @app.route('/all_urls', methods=['GET','POST'])
 def all_urls():
