@@ -142,11 +142,11 @@ def get_urls():
     conn.close()
     return urls
 
-@app.route('/robots.txt')
+@app.route('/robots.txt', methods=['GET','POST'])
 def robots_txt():
     return send_from_directory(app.static_folder, 'robots.txt')
 
-@app.route('/all_urls')
+@app.route('/all_urls', methods=['GET','POST'])
 def all_urls():
     urls = get_urls()
     return render_template('all_urls.html', urls=urls, hashids=hashids)
