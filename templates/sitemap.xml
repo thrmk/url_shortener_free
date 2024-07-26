@@ -4,8 +4,8 @@
     <url>
         <loc>{{ url.loc }}</loc>
         <lastmod>{{ now.strftime('%Y-%m-%d') }}</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.5</priority>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
     </url>
     {% endfor %}
 </urlset>

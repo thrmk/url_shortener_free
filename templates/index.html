@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Welcome to FlaskShortener{% endblock %}
+{% block title %}Shorten URL - My URL Shortener{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -17,8 +17,11 @@
             <input type="text" name="expiry" id="expiry" class="form-control" placeholder="Select expiry date and time" value="{{ expiry }}">
             <small id="expiryHelp" class="form-text text-muted">Set the expiry date and time for the shortened URL. Default is 24 hours from now.</small>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Submit</button>
-    </form>
+        <button type="submit" class="btn btn-primary animated-button">
+            Submit
+            <i class="fas fa-arrow-down animated-icon"></i>
+        </button>        
+            </form>
 
     {% if short_url %}
     <hr class="my-4">

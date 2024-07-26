@@ -1,6 +1,5 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash, Response, send_from_directory
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashids import Hashids
 from datetime import datetime, timedelta
@@ -98,7 +97,6 @@ def redirect_url(short_url):
     print(f'Redirecting to: {url["original_url"]}')  # Debugging line
     return redirect(url['original_url'])
 
-
 @app.route('/stats')
 def stats():
     urls = get_urls()
@@ -108,14 +106,14 @@ def stats():
 @app.route('/sitemap.xml')
 def sitemap():
     urls = [
-        {'loc': url_for('home', _external=True)},
         {'loc': url_for('index', _external=True)},
-        {'loc': url_for('stats', _external=True)},
+        {'loc': url_for('home', _external=True)},
         {'loc': url_for('privacy_policy', _external=True)},
+        {'loc': url_for('robots_txt', _external=True)},
+        {'loc': url_for('sitemap', _external=True)},
     ]
     xml = render_template('sitemap.xml', urls=urls, now=datetime.now())
     return Response(xml, mimetype='application/xml')
-
 
 @app.route('/privacy_policy')
 def privacy_policy():
@@ -151,11 +149,5 @@ def all_urls():
     urls = get_urls()
     return render_template('all_urls.html', urls=urls, hashids=hashids)
 
-def get_urls():
-    conn = get_db_connection()
-    urls = conn.execute('SELECT * FROM urls').fetchall()
-    conn.close()
-    return urls
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
