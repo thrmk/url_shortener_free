@@ -72,7 +72,9 @@ def url_shortener():
 
         short_url_code = hashids.encode(len(get_urls()) + 1)
         short_url = url_for('redirect_url', short_url=short_url_code, _external=True)
-        ip_address = request.remote_addr
+        
+        # Retrieve the real IP address
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
         location = get_location_from_ip(ip_address)  # Get location from IP address
 
         conn = get_db_connection()
@@ -165,5 +167,5 @@ def all_urls():
     urls = get_urls()
     return render_template('all_urls.html', urls=urls, hashids=hashids)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
