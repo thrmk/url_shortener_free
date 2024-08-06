@@ -143,8 +143,9 @@ def stats():
 @app.route('/sitemap.xml')
 def sitemap():
     urls = [
-        {'loc': url_for('url_shortener', _external=True)},
         {'loc': url_for('home', _external=True)},
+        {'loc': url_for('url_shortener', _external=True)},
+        {'loc': url_for('bmi', _external=True)},
         {'loc': url_for('privacy_policy', _external=True)},
         {'loc': url_for('robots_txt', _external=True)},
         {'loc': url_for('sitemap', _external=True)},
