@@ -4,6 +4,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from hashids import Hashids
 from datetime import datetime, timedelta
 
+import requests
+
+def get_location_from_ip(ip_address):
+    try:
+        response = requests.get(f'http://ip-api.com/json/{ip_address}')
+        data = response.json()
+        return data.get('city', '') + ', ' + data.get('country', '')
+    except requests.RequestException:
+        return ''
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a secure key
 hashids = Hashids(min_length=8, salt='your_salt')
@@ -13,16 +23,21 @@ def init_db():
     with sqlite3.connect('database.db') as connection:
         cursor = connection.cursor()
         cursor.executescript('''
-        CREATE TABLE IF NOT EXISTS urls (
+        DROP TABLE IF EXISTS urls;
+        DROP TABLE IF EXISTS users;
+
+        CREATE TABLE urls (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             original_url TEXT NOT NULL,
             short_url TEXT UNIQUE NOT NULL,
             clicks INTEGER NOT NULL DEFAULT 0,
-            expiry TEXT NOT NULL
+            expiry TEXT NOT NULL,
+            ip_address TEXT,
+            location TEXT
         );
 
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL
@@ -42,8 +57,8 @@ def get_db_connection():
 def home():
     return render_template('home.html')
 
-@app.route('/index', methods=['GET', 'POST'])
-def index():
+@app.route('/url_shortener', methods=['GET', 'POST'])
+def url_shortener():
     default_expiry = datetime.now() + timedelta(hours=24)
     default_expiry_str = default_expiry.strftime('%Y-%m-%d %H:%M')
 
@@ -53,14 +68,18 @@ def index():
 
         if not original_url:
             flash('Please enter a URL.')
-            return redirect(url_for('index'))
+            return redirect(url_for('url_shortener'))
 
         short_url_code = hashids.encode(len(get_urls()) + 1)
         short_url = url_for('redirect_url', short_url=short_url_code, _external=True)
+        ip_address = request.remote_addr
+        location = get_location_from_ip(ip_address)  # Get location from IP address
+
         conn = get_db_connection()
 
         try:
-            conn.execute('INSERT INTO urls (original_url, short_url, expiry) VALUES (?, ?, ?)', (original_url, short_url_code, expiry))
+            conn.execute('INSERT INTO urls (original_url, short_url, expiry, ip_address, location) VALUES (?, ?, ?, ?, ?)', 
+                         (original_url, short_url_code, expiry, ip_address, location))
             conn.commit()
             flash('URL shortened successfully!')
         except sqlite3.IntegrityError:
@@ -68,33 +87,29 @@ def index():
         finally:
             conn.close()
 
-        return render_template('index.html', short_url=short_url, expiry=expiry)
+        return render_template('url_shortener.html', short_url=short_url, expiry=expiry)
 
-    return render_template('index.html', expiry=default_expiry_str)
+    return render_template('url_shortener.html', expiry=default_expiry_str)
 
 @app.route('/<short_url>')
 def redirect_url(short_url):
     conn = get_db_connection()
     url = conn.execute('SELECT * FROM urls WHERE short_url = ?', (short_url,)).fetchone()
-    conn.close()
-
     if url is None:
         return 'URL not found', 404
     
     expiry = datetime.strptime(url['expiry'], '%Y-%m-%d %H:%M')
     if datetime.now() > expiry:
-        conn = get_db_connection()
         conn.execute('DELETE FROM urls WHERE short_url = ?', (short_url,))
         conn.commit()
         conn.close()
         return 'URL has expired', 410
 
-    conn = get_db_connection()
+    # Update click count only
     conn.execute('UPDATE urls SET clicks = clicks + 1 WHERE short_url = ?', (short_url,))
     conn.commit()
     conn.close()
 
-    print(f'Redirecting to: {url["original_url"]}')  # Debugging line
     return redirect(url['original_url'])
 
 @app.route('/stats')
@@ -106,7 +121,7 @@ def stats():
 @app.route('/sitemap.xml')
 def sitemap():
     urls = [
-        {'loc': url_for('index', _external=True)},
+        {'loc': url_for('url_shortener', _external=True)},
         {'loc': url_for('home', _external=True)},
         {'loc': url_for('privacy_policy', _external=True)},
         {'loc': url_for('robots_txt', _external=True)},
@@ -119,19 +134,20 @@ def sitemap():
 def privacy_policy():
     return render_template('privacy_policy.html')
 
-@app.route('/delete_url/<id>', methods=['POST'])
+@app.route('/delete_url/<int:id>', methods=['POST'])
 def delete_url(id):
-    url_id = hashids.decode(id)
-    if not url_id:
-        flash('Invalid URL ID.')
-        return redirect(url_for('stats'))
-
-    url_id = url_id[0]
+    # Directly use the integer ID without decoding since it's coming as an integer
     conn = get_db_connection()
-    conn.execute('DELETE FROM urls WHERE id = ?', (url_id,))
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM urls WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('URL deleted successfully.')
+
+    if cursor.rowcount == 0:
+        flash('Failed to delete URL. It may not exist.')
+    else:
+        flash('URL deleted successfully.')
+
     return redirect(url_for('stats'))
 
 def get_urls():

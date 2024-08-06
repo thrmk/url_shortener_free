@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://url-shortener-free.onrender.com/sitemap.xml
+Sitemap: https://www.tmlabs.in/sitemap.xml

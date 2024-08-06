@@ -15,6 +15,8 @@
                 <th>Short URL</th>
                 <th>Clicks</th>
                 <th>Expiry</th>
+                <th>IP Address</th>
+                <th>Location</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -27,6 +29,8 @@
                 <td><a href="{{ url_for('redirect_url', short_url=url.short_url) }}">{{ url.short_url }}</a></td>
                 <td>{{ url.clicks }}</td>
                 <td>{{ url.expiry }}</td>
+                <td>{{ url.ip_address }}</td>
+                <td>{{ url.location }}</td>
                 <td>
                     <form method="POST" action="{{ url_for('delete_url', id=url.id) }}">
                         <button type="submit" class="btn btn-danger">Delete</button>
