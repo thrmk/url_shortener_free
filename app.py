@@ -174,7 +174,7 @@ def delete_url(id):
     return redirect(url_for('stats'))
 
 @app.route('/bmi', methods=['GET', 'POST'])
-def bmi_tool():
+def bmi():
     bmi = None
     category = ''
     
