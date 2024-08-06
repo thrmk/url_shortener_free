@@ -217,5 +217,5 @@ def all_urls():
     urls = get_urls()
     return render_template('all_urls.html', urls=urls, hashids=hashids)
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)

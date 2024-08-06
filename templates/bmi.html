@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>BMI Calculator</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="weight">Weight:</label>
+            <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
+            <select class="form-control mt-2" id="weight_unit" name="weight_unit">
+                <option value="kg">Kilograms (kg)</option>
+                <option value="lbs">Pounds (lbs)</option>
+                <option value="oz">Ounces (oz)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="height">Height:</label>
+            <input type="number" step="0.1" class="form-control" id="height" name="height" required>
+            <select class="form-control mt-2" id="height_unit" name="height_unit">
+                <option value="cm">Centimeters (cm)</option>
+                <option value="inches">Inches (in)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Calculate</button>
+    </form>
+
+    {% if bmi is not none %}
+    <div class="mt-4">
+        <h4>Your BMI: {{ bmi }}</h4>
+        <p>Category: {{ category }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
