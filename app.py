@@ -18,7 +18,27 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a secure key
 hashids = Hashids(min_length=8, salt='your_salt')
 
-# Database initialization
+def calculate_bmi(weight, weight_unit, height, height_unit):
+    try:
+        # Convert weight to kilograms
+        if weight_unit == 'lbs':
+            weight_kg = weight * 0.453592  # pounds to kg
+        elif weight_unit == 'oz':
+            weight_kg = weight * 0.0283495  # ounces to kg
+        else:  # kg
+            weight_kg = weight
+
+        # Convert height to meters
+        if height_unit == 'inches':
+            height_m = height * 0.0254  # inches to meters
+        else:  # cm
+            height_m = height / 100  # cm to meters
+
+        bmi = weight_kg / (height_m * height_m)
+        return round(bmi, 2)
+    except (ZeroDivisionError, ValueError):
+        return None
+
 def init_db():
     with sqlite3.connect('database.db') as connection:
         cursor = connection.cursor()
@@ -151,6 +171,36 @@ def delete_url(id):
         flash('URL deleted successfully.')
 
     return redirect(url_for('stats'))
+
+@app.route('/bmi', methods=['GET', 'POST'])
+def bmi_tool():
+    bmi = None
+    category = ''
+    
+    if request.method == 'POST':
+        try:
+            weight = float(request.form.get('weight', 0))
+            weight_unit = request.form.get('weight_unit', 'kg')
+            height = float(request.form.get('height', 0))
+            height_unit = request.form.get('height_unit', 'cm')
+            
+            bmi = calculate_bmi(weight, weight_unit, height, height_unit)
+
+            if bmi is not None:
+                if bmi < 18.5:
+                    category = 'Underweight'
+                elif 18.5 <= bmi < 24.9:
+                    category = 'Normal weight'
+                elif 25 <= bmi < 29.9:
+                    category = 'Overweight'
+                else:
+                    category = 'Obesity'
+            else:
+                flash('Invalid input. Please enter valid numbers for weight and height.')
+        except ValueError:
+            flash('Please enter valid numeric values for weight and height.')
+
+    return render_template('bmi.html', bmi=bmi, category=category)
 
 def get_urls():
     conn = get_db_connection()
