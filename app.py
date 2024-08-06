@@ -75,7 +75,7 @@ def url_shortener():
         
         # Retrieve the real IP address
         ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-        location = get_location_from_ip(ip_address)  # Get location from IP address
+        location = get_location_from_ip(ip_address.split(',')[0].strip())  # Get location from IP address
 
         conn = get_db_connection()
 
