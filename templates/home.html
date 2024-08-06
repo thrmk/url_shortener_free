@@ -3,12 +3,60 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="jumbotron text-center">
-    <h1 class="display-4">Welcome to Our URL Shortener Service</h1>
-    <p class="lead">Manage and track your links with ease using our platform, which offers features similar to bitly, tinyurl, and more.</p>
-    <!-- Update the URL in the button -->
-    <a class="btn btn-primary btn-lg mt-4" href="{{ url_for('url_shortener') }}" role="button">
-        Click Here <i class="fas fa-arrow-down animated-icon"></i>
-    </a>
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Welcome to tMLABS India</h1>
+        <p class="lead">Explore our range of software tools designed to simplify your tasks, including URL Shortening, BMI calculation, and more to come!</p>
+    </div>
+
+    <div class="row mt-4">
+        <!-- URL Shortener Tool -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">URL Shortener</h5>
+                    <p class="card-text">Shorten and manage your URLs with our efficient and easy-to-use URL Shortener tool.</p>
+                    <a href="{{ url_for('url_shortener') }}" class="btn btn-primary">
+                        Use URL Shortener <i class="fas fa-link"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- BMI Tool -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">BMI Calculator</h5>
+                    <p class="card-text">Calculate your Body Mass Index (BMI) quickly using various units of measurement.</p>
+                    <a href="{{ url_for('bmi_tool') }}" class="btn btn-primary">
+                        Calculate BMI <i class="fas fa-weight"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Placeholder for Future Tool 1 -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Coming Soon: Tool 1</h5>
+                    <p class="card-text">Stay tuned for our upcoming tools designed to enhance your productivity.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder for Future Tool 2 -->
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Coming Soon: Tool 2</h5>
+                    <p class="card-text">We're continuously innovating to bring you new tools. Check back soon for updates!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
