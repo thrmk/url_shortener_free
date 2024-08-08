@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore our range of software tools, including URL Shortener and BMI Calculator, to manage and track your data easily.">
+    <meta name="description" content="Explore our range of software tools, including URL Shortener, Password Generator, Unit Converter, BMI Calculator, to manage and track your data easily.">
     <meta name="keywords" content="URL Shortener, BMI Calculator, Link Management, Data Tools">
     <meta name="author" content="Manoj">
 
     <!-- Open Graph meta tags for social media -->
     <meta property="og:title" content="{% block og_title %}tMLABS India{% endblock %}">
-    <meta property="og:description" content="Explore our range of software tools, including URL Shortener and BMI Calculator, to manage and track your data easily.">
+    <meta property="og:description" content="Explore our range of software tools, including URL Shortener, Password Generator, Unit Converter, BMI Calculator, to manage and track your data easily.">
     <meta property="og:image" content="{{ url_for('static', filename='tmlabs_logo.png') }}">
     <meta property="og:url" content="{{ url_for('home', _external=True) }}">
     <meta property="og:type" content="website">
@@ -19,7 +19,7 @@
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}tMLABS India{% endblock %}">
-    <meta name="twitter:description" content="Explore our range of software tools, including URL Shortener and BMI Calculator, to manage and track your data easily.">
+    <meta name="twitter:description" content="Explore our range of software tools, including URL Shortener, Password Generator, Unit Converter, BMI Calculator, to manage and track your data easily.">
     <meta name="twitter:image" content="{{ url_for('static', filename='tmlabs_logo.png') }}">
 
     <link rel="canonical" href="{{ url_for('home', _external=True) }}">
@@ -117,7 +117,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='tmlabs_logo.png') }}" alt="Home URL Shortener Free">
+                <img src="{{ url_for('static', filename='tmlabs_logo.png') }}" alt="Home">
                 tMLABS India
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,6 +128,8 @@
                     <!-- Update the URL in the navbar -->
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('url_shortener') }}">Shorten URL</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('bmi') }}">BMI Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('password_generator') }}">Password Generator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('unit_converter') }}">Unit Converter</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
                 </ul>
             </div>

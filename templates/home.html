@@ -6,12 +6,12 @@
 <div class="container mt-5">
     <div class="jumbotron text-center">
         <h1 class="display-4">Welcome to tMLABS India</h1>
-        <p class="lead">Explore our range of software tools designed to simplify your tasks, including URL Shortening, BMI calculation, and more to come!</p>
+        <p class="lead">Explore our range of software tools designed to simplify your tasks, including URL Shortening, BMI calculation, Password Generator, Unit Converter, and more to come!</p>
     </div>
 
     <div class="row mt-4">
         <!-- URL Shortener Tool -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">URL Shortener</h5>
@@ -24,7 +24,7 @@
         </div>
 
         <!-- BMI Tool -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">BMI Calculator</h5>
@@ -35,28 +35,32 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-4">
-        <!-- Placeholder for Future Tool 1 -->
-        <div class="col-md-6">
+        <!-- Password Generator Tool -->
+        <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Coming Soon: Tool 1</h5>
-                    <p class="card-text">Stay tuned for our upcoming tools designed to enhance your productivity.</p>
+                    <h5 class="card-title">Password Generator</h5>
+                    <p class="card-text">Create secure passwords with ease using our customizable Password Generator.</p>
+                    <a href="{{ url_for('password_generator') }}" class="btn btn-primary">
+                        Generate Password <i class="fas fa-key"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Placeholder for Future Tool 2 -->
         <div class="col-md-6">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Coming Soon: Tool 2</h5>
-                    <p class="card-text">We're continuously innovating to bring you new tools. Check back soon for updates!</p>
+                    <h5 class="card-title">Unit Converter</h5>
+                    <p class="card-text">Convert units of measurement easily with our Unit Converter tool.</p>
+                    <a href="{{ url_for('unit_converter') }}" class="btn btn-primary">
+                        Use Unit Converter <i class="fas fa-exchange-alt"></i>
+                    </a>
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 {% endblock %}

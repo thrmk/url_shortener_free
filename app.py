@@ -3,7 +3,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, Res
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashids import Hashids
 from datetime import datetime, timedelta
-
+import random
+import string
+import re
 import requests
 
 def get_location_from_ip(ip_address):
@@ -140,19 +142,6 @@ def stats():
     print(urls)  # Debugging line
     return render_template('stats.html', urls=urls, hashids=hashids)
 
-@app.route('/sitemap.xml')
-def sitemap():
-    urls = [
-        {'loc': url_for('home', _external=True)},
-        {'loc': url_for('url_shortener', _external=True)},
-        {'loc': url_for('bmi', _external=True)},
-        {'loc': url_for('privacy_policy', _external=True)},
-        {'loc': url_for('robots_txt', _external=True)},
-        {'loc': url_for('sitemap', _external=True)},
-    ]
-    xml = render_template('sitemap.xml', urls=urls, now=datetime.now())
-    return Response(xml, mimetype='application/xml')
-
 @app.route('/privacy_policy')
 def privacy_policy():
     return render_template('privacy_policy.html')
@@ -202,6 +191,126 @@ def bmi():
             flash('Please enter valid numeric values for weight and height.')
 
     return render_template('bmi.html', bmi=bmi, category=category)
+
+def assess_password_strength(password):
+    strength = "Weak"
+    score = 0
+    color = "red"
+
+    # Basic length check
+    if len(password) >= 8:
+        score += 1
+
+    # Check for upper case letters
+    if re.search(r'[A-Z]', password):
+        score += 1
+
+    # Check for digits
+    if re.search(r'\d', password):
+        score += 1
+
+    # Check for special characters
+    if re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        score += 1
+
+    # Additional score for very strong passwords
+    if len(password) >= 12 and score == 4:
+        strength = "Very Strong"
+        color = "green"
+    elif len(password) >= 10 and score == 4:
+        strength = "Strong"
+        color = "blue"
+    elif score >= 2:
+        strength = "Moderate"
+        color = "orange"
+    
+    return strength, color
+
+def generate_password(length, include_uppercase, include_digits, include_special):
+    chars = string.ascii_lowercase
+    if include_uppercase:
+        chars += string.ascii_uppercase
+    if include_digits:
+        chars += string.digits
+    if include_special:
+        chars += string.punctuation
+
+    return ''.join(random.choice(chars) for _ in range(length))
+
+@app.route('/password_generator', methods=['GET', 'POST'])
+def password_generator():
+    password = None
+    strength = None
+    color = "red"
+
+    # Default settings
+    include_uppercase = False
+    include_digits = False
+    include_special = False
+    length = 12
+
+    if request.method == 'POST':
+        length = int(request.form.get('length', 12))
+        include_uppercase = 'uppercase' in request.form
+        include_digits = 'digits' in request.form
+        include_special = 'special' in request.form
+
+        password = generate_password(length, include_uppercase, include_digits, include_special)
+        strength, color = assess_password_strength(password)
+
+    return render_template(
+        'password_generator.html',
+        password=password,
+        strength=strength,
+        color=color,
+        length=length,
+        include_uppercase=include_uppercase,
+        include_digits=include_digits,
+        include_special=include_special
+    )
+
+@app.route('/unit_converter', methods=['GET', 'POST'])
+def unit_converter():
+    result = None
+    if request.method == 'POST':
+        value = float(request.form['value'])
+        from_unit = request.form['from_unit']
+        to_unit = request.form['to_unit']
+
+        result = convert_units(value, from_unit, to_unit)
+
+    return render_template('unit_converter.html', result=result)
+
+def convert_units(value, from_unit, to_unit):
+    # Add conversion logic here
+    conversion_rates = {
+        ('meters', 'kilometers'): 0.001,
+        ('kilometers', 'meters'): 1000,
+        ('grams', 'kilograms'): 0.001,
+        ('kilograms', 'grams'): 1000,
+        # Add more conversions as needed
+    }
+
+    if (from_unit, to_unit) in conversion_rates:
+        return value * conversion_rates[(from_unit, to_unit)]
+    else:
+        return "Conversion not supported."
+
+@app.route('/sitemap.xml')
+def sitemap():
+    urls = [
+        {'loc': url_for('home', _external=True)},
+        {'loc': url_for('url_shortener', _external=True)},
+        {'loc': url_for('bmi', _external=True)},
+        {'loc': url_for('password_generator', _external=True)},
+        {'loc': url_for('unit_converter', _external=True)},
+        {'loc': url_for('privacy_policy', _external=True)},
+        {'loc': url_for('robots_txt', _external=True)},
+        {'loc': url_for('sitemap', _external=True)},
+    ]
+    xml = render_template('sitemap.xml', urls=urls, now=datetime.now())
+    return Response(xml, mimetype='application/xml')
+
 
 def get_urls():
     conn = get_db_connection()
