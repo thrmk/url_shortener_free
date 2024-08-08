@@ -271,30 +271,140 @@ def password_generator():
 
 @app.route('/unit_converter', methods=['GET', 'POST'])
 def unit_converter():
+    value = ''
+    from_unit = ''
+    to_unit = ''
+    category = ''
     result = None
-    if request.method == 'POST':
-        value = float(request.form['value'])
-        from_unit = request.form['from_unit']
-        to_unit = request.form['to_unit']
 
-        result = convert_units(value, from_unit, to_unit)
-
-    return render_template('unit_converter.html', result=result)
-
-def convert_units(value, from_unit, to_unit):
-    # Add conversion logic here
-    conversion_rates = {
-        ('meters', 'kilometers'): 0.001,
-        ('kilometers', 'meters'): 1000,
-        ('grams', 'kilograms'): 0.001,
-        ('kilograms', 'grams'): 1000,
-        # Add more conversions as needed
+    units = {
+        'distance': ['meters', 'kilometers', 'miles', 'yards', 'feet', 'inches', 'centimeters', 'millimeters', 'nautical miles'],
+        'weight': ['grams', 'kilograms', 'pounds', 'ounces', 'milligrams', 'micrograms', 'stones', 'tons', 'carats'],
+        'temperature': ['celsius', 'fahrenheit', 'kelvin', 'rankine'],
+        'volume': ['liters', 'milliliters', 'gallons', 'cups', 'pints', 'quarts', 'cubic meters', 'cubic centimeters', 'cubic inches'],
+        'data': ['bytes', 'kilobytes', 'megabytes', 'gigabytes', 'terabytes', 'petabytes', 'exabytes', 'zettabytes', 'yottabytes'],
+        # Add more categories and units as needed
     }
 
-    if (from_unit, to_unit) in conversion_rates:
-        return value * conversion_rates[(from_unit, to_unit)]
-    else:
-        return "Conversion not supported."
+    if request.method == 'POST':
+        try:
+            value = float(request.form['value'])
+            category = request.form['category']
+            from_unit = request.form['from_unit']
+            to_unit = request.form['to_unit']
+
+            result = convert_units(value, from_unit, to_unit, category)
+        except ValueError:
+            flash('Please enter a valid number.')
+
+    return render_template('unit_converter.html', result=result, value=value, from_unit=from_unit, to_unit=to_unit, category=category, units=units)
+
+
+def convert_units(value, from_unit, to_unit, category):
+    conversion_rates = {
+        'distance': {
+            ('meters', 'kilometers'): 0.001,
+            ('kilometers', 'meters'): 1000,
+            ('meters', 'miles'): 0.000621371,
+            ('miles', 'meters'): 1609.34,
+            ('meters', 'yards'): 1.09361,
+            ('yards', 'meters'): 0.9144,
+            ('meters', 'feet'): 3.28084,
+            ('feet', 'meters'): 0.3048,
+            ('meters', 'inches'): 39.3701,
+            ('inches', 'meters'): 0.0254,
+            ('meters', 'centimeters'): 100,
+            ('centimeters', 'meters'): 0.01,
+            ('meters', 'millimeters'): 1000,
+            ('millimeters', 'meters'): 0.001,
+            ('meters', 'nautical miles'): 0.000539957,
+            ('nautical miles', 'meters'): 1852,
+            # Add more distance conversions
+        },
+        'weight': {
+            ('grams', 'kilograms'): 0.001,
+            ('kilograms', 'grams'): 1000,
+            ('grams', 'pounds'): 0.00220462,
+            ('pounds', 'grams'): 453.592,
+            ('grams', 'ounces'): 0.035274,
+            ('ounces', 'grams'): 28.3495,
+            ('grams', 'milligrams'): 1000,
+            ('milligrams', 'grams'): 0.001,
+            ('grams', 'micrograms'): 1e6,
+            ('micrograms', 'grams'): 1e-6,
+            ('kilograms', 'stones'): 0.157473,
+            ('stones', 'kilograms'): 6.35029,
+            ('kilograms', 'tons'): 0.001,
+            ('tons', 'kilograms'): 1000,
+            ('grams', 'carats'): 5,
+            ('carats', 'grams'): 0.2,
+            # Add more weight conversions
+        },
+        'temperature': {
+            ('celsius', 'fahrenheit'): lambda c: (c * 9/5) + 32,
+            ('fahrenheit', 'celsius'): lambda f: (f - 32) * 5/9,
+            ('celsius', 'kelvin'): lambda c: c + 273.15,
+            ('kelvin', 'celsius'): lambda k: k - 273.15,
+            ('fahrenheit', 'kelvin'): lambda f: (f + 459.67) * 5/9,
+            ('kelvin', 'fahrenheit'): lambda k: (k * 9/5) - 459.67,
+            ('celsius', 'rankine'): lambda c: (c + 273.15) * 9/5,
+            ('rankine', 'celsius'): lambda r: (r - 491.67) * 5/9,
+            # Add more temperature conversions
+        },
+        'volume': {
+            ('liters', 'milliliters'): 1000,
+            ('milliliters', 'liters'): 0.001,
+            ('liters', 'gallons'): 0.264172,
+            ('gallons', 'liters'): 3.78541,
+            ('liters', 'cups'): 4.22675,
+            ('cups', 'liters'): 0.236588,
+            ('liters', 'pints'): 2.11338,
+            ('pints', 'liters'): 0.473176,
+            ('liters', 'quarts'): 1.05669,
+            ('quarts', 'liters'): 0.946353,
+            ('cubic meters', 'liters'): 1000,
+            ('liters', 'cubic meters'): 0.001,
+            ('cubic centimeters', 'liters'): 0.001,
+            ('liters', 'cubic centimeters'): 1000,
+            ('cubic inches', 'liters'): 0.0163871,
+            ('liters', 'cubic inches'): 61.0237,
+            # Add more volume conversions
+        },
+        'data': {
+            ('bytes', 'kilobytes'): 0.001,
+            ('kilobytes', 'bytes'): 1000,
+            ('kilobytes', 'megabytes'): 0.001,
+            ('megabytes', 'kilobytes'): 1000,
+            ('megabytes', 'gigabytes'): 0.001,
+            ('gigabytes', 'megabytes'): 1000,
+            ('gigabytes', 'terabytes'): 0.001,
+            ('terabytes', 'gigabytes'): 1000,
+            ('terabytes', 'petabytes'): 0.001,
+            ('petabytes', 'terabytes'): 1000,
+            ('petabytes', 'exabytes'): 0.001,
+            ('exabytes', 'petabytes'): 1000,
+            ('exabytes', 'zettabytes'): 0.001,
+            ('zettabytes', 'exabytes'): 1000,
+            ('zettabytes', 'yottabytes'): 0.001,
+            ('yottabytes', 'zettabytes'): 1000,
+            # Add more data conversions
+        },
+        # Add more categories and conversions as needed
+    }
+
+    try:
+        if category in conversion_rates:
+            conversion = conversion_rates[category].get((from_unit, to_unit))
+            if conversion:
+                if callable(conversion):  # For lambda functions (temperature)
+                    return round(conversion(value), 2)
+                return round(value * conversion, 2)
+            else:
+                return "Conversion not supported."
+        else:
+            return "Invalid category."
+    except KeyError:
+        return "Invalid conversion."
 
 @app.route('/sitemap.xml')
 def sitemap():
