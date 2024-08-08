@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Age Calculator{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Age Calculator</h1>
+    <form method="POST" action="{{ url_for('age_calculator') }}">
+        <div class="form-group">
+            <label for="dob">Enter your Date of Birth:</label>
+            <input type="date" class="form-control short-input" id="dob" name="dob" value="{{ request.form.get('dob', '') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="format_type">Select format:</label>
+            <select class="form-control short-input" id="format_type" name="format_type">
+                <option value="full" {% if format_type == 'full' %}selected{% endif %}>Full Details</option>
+                <option value="days" {% if format_type == 'days' %}selected{% endif %}>Days Only</option>
+                <option value="months" {% if format_type == 'months' %}selected{% endif %}>Total Months Only</option>
+                <option value="time" {% if format_type == 'time' %}selected{% endif %}>Time Only</option>
+                <option value="hours" {% if format_type == 'hours' %}selected{% endif %}>Hours Only</option>
+                <option value="minutes" {% if format_type == 'minutes' %}selected{% endif %}>Minutes Only</option>
+                <option value="seconds" {% if format_type == 'seconds' %}selected{% endif %}>Seconds Only</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Calculate Age</button>
+    </form>
+    
+    {% if age_details %}
+        <div class="mt-4">
+            {% if age_details == 'Invalid date format. Please enter a valid date.' %}
+                <div class="alert alert-danger">{{ age_details }}</div>
+            {% else %}
+                <h3>Your age details:</h3>
+                {% if format_type == 'days' %}
+                    <p>Total Days: {{ age_details.days }}</p>
+                {% elif format_type == 'months' %}
+                    <p>Total Months: {{ age_details.months }}</p>
+                {% elif format_type == 'time' %}
+                    <p>Time: {{ age_details.time }}</p>
+                {% elif format_type == 'hours' %}
+                    <p>Total Hours: {{ age_details.hours }}</p>
+                {% elif format_type == 'minutes' %}
+                    <p>Total Minutes: {{ age_details.minutes }}</p>
+                {% elif format_type == 'seconds' %}
+                    <p>Total Seconds: {{ age_details.seconds }}</p>
+                {% elif format_type == 'full' %}
+                    <ul>
+                        <li>Years: {{ age_details.years }}</li>
+                        <li>Months: {{ age_details.months }}</li>
+                        <li>Days: {{ age_details.days }}</li>
+                        <li>Total Days: {{ total_days }}</li>
+                        <li>Total Hours: {{ total_hours }}</li>
+                        <li>Total Minutes: {{ total_minutes }}</li>
+                        <li>Total Seconds: {{ total_seconds }}</li>
+                        <li>Total Months: {{ total_months }}</li>
+                        <li>Time: {{ age_details.time }}</li>
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .short-input {
+        max-width: 60%; /* Adjust the width to your preference */
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

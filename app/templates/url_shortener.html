@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Shorten URL - tMLABS India URL Shortener{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Welcome to tMLABS India URL Shortener</h1>
+
+    <form method="post" class="form" style="max-width: 600px; margin: auto;">
+        <div class="form-group mb-3">
+            <label for="url" class="form-label">URL</label>
+            <input type="text" name="url" id="url" placeholder="Enter URL to shorten" class="form-control" value="{{ request.form['url'] }}" autofocus>
+            <small id="urlHelp" class="form-text text-muted">Enter the full URL you want to shorten.</small>
+        </div>
+        <div class="form-group mb-3">
+            <label for="expiry" class="form-label">Expiry Date and Time</label>
+            <input type="text" name="expiry" id="expiry" class="form-control" placeholder="Select expiry date and time" value="{{ expiry }}">
+            <small id="expiryHelp" class="form-text text-muted">Set the expiry date and time for the shortened URL. Default is 24 hours from now.</small>
+        </div>
+        <button type="submit" class="btn btn-primary animated-button">
+            Submit
+            <i class="fas fa-arrow-down animated-icon"></i>
+        </button>        
+    </form>
+
+    {% if short_url %}
+    <hr class="my-4">
+    <div class="alert alert-success" role="alert">
+        Shortened URL: <a href="{{ short_url }}" class="alert-link">{{ short_url }}</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Initialize Flatpickr
+    flatpickr("#expiry", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        defaultDate: "{{ expiry }}"
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}URL Statistics{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">URL Statistics</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Created</th>
+                <th>Original URL</th>
+                <th>Short URL</th>
+                <th>Clicks</th>
+                <th>Expiry</th>
+                <th>IP Address</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+            <tr>
+                <td>{{ url.id }}</td>
+                <td>{{ url.created }}</td>
+                <td>{{ url.original_url }}</td>
+                <td><a href="{{ url_for('redirect_url.redirect_url', short_url=url.short_url) }}">{{ url.short_url }}</a></td>
+                <td>{{ url.clicks }}</td>
+                <td>{{ url.expiry }}</td>
+                <td>{{ url.ip_address }}</td>
+                <td>{{ url.location }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_url.delete_url', id=url.id) }}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>            
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>
+{% endblock %}

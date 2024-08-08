@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Unit Converter{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Unit Converter</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="value">Value:</label>
+            <input type="number" class="form-control" id="value" name="value" step="any" value="{{ value }}" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" name="category" onchange="updateUnits()">
+                <option value="">Select Category</option>
+                {% for cat in units.keys() %}
+                    <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>{{ cat.capitalize() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="from_unit">From Unit:</label>
+            <select class="form-control" id="from_unit" name="from_unit">
+                {% if category %}
+                    {% for unit in units[category] %}
+                        <option value="{{ unit }}" {% if from_unit == unit %}selected{% endif %}>{{ unit.capitalize() }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="to_unit">To Unit:</label>
+            <select class="form-control" id="to_unit" name="to_unit">
+                {% if category %}
+                    {% for unit in units[category] %}
+                        <option value="{{ unit }}" {% if to_unit == unit %}selected{% endif %}>{{ unit.capitalize() }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Convert</button>
+    </form>
+
+    {% if result is not none %}
+        <div class="alert alert-info mt-3">
+            <strong>Result:</strong> {{ result }}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function updateUnits() {
+    const category = document.getElementById('category').value;
+    const units = {{ units|tojson }};
+    const fromUnitSelect = document.getElementById('from_unit');
+    const toUnitSelect = document.getElementById('to_unit');
+
+    fromUnitSelect.innerHTML = '';
+    toUnitSelect.innerHTML = '';
+
+    if (category && units[category]) {
+        units[category].forEach(unit => {
+            const optionFrom = document.createElement('option');
+            const optionTo = document.createElement('option');
+            optionFrom.value = optionTo.value = unit;
+            optionFrom.textContent = optionTo.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+            fromUnitSelect.appendChild(optionFrom);
+            toUnitSelect.appendChild(optionTo);
+        });
+    }
+}
+</script>
+{% endblock %}

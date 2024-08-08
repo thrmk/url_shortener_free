@@ -7,6 +7,7 @@ import random
 import string
 import re
 import requests
+from dateutil.relativedelta import relativedelta
 
 def get_location_from_ip(ip_address):
     try:
@@ -299,112 +300,201 @@ def unit_converter():
 
     return render_template('unit_converter.html', result=result, value=value, from_unit=from_unit, to_unit=to_unit, category=category, units=units)
 
-
 def convert_units(value, from_unit, to_unit, category):
-    conversion_rates = {
+    base_conversions = {
         'distance': {
-            ('meters', 'kilometers'): 0.001,
-            ('kilometers', 'meters'): 1000,
-            ('meters', 'miles'): 0.000621371,
-            ('miles', 'meters'): 1609.34,
-            ('meters', 'yards'): 1.09361,
-            ('yards', 'meters'): 0.9144,
-            ('meters', 'feet'): 3.28084,
-            ('feet', 'meters'): 0.3048,
-            ('meters', 'inches'): 39.3701,
-            ('inches', 'meters'): 0.0254,
-            ('meters', 'centimeters'): 100,
-            ('centimeters', 'meters'): 0.01,
-            ('meters', 'millimeters'): 1000,
-            ('millimeters', 'meters'): 0.001,
-            ('meters', 'nautical miles'): 0.000539957,
-            ('nautical miles', 'meters'): 1852,
-            # Add more distance conversions
+            'meters': 1,
+            'kilometers': 1000,
+            'miles': 1609.34,
+            'yards': 0.9144,
+            'feet': 0.3048,
+            'inches': 0.0254,
+            'centimeters': 0.01,
+            'millimeters': 0.001,
+            'decimeters': 0.1,
+            'hectometers': 100,
+            'nautical miles': 1852,
+            'light-years': 9.461e15,  # 1 light-year = 9.461 trillion kilometers
+            'astronomical units': 1.496e11,  # 1 astronomical unit = 149.6 million kilometers
+            'parsecs': 3.086e16,  # 1 parsec = 3.086 trillion kilometers
         },
         'weight': {
-            ('grams', 'kilograms'): 0.001,
-            ('kilograms', 'grams'): 1000,
-            ('grams', 'pounds'): 0.00220462,
-            ('pounds', 'grams'): 453.592,
-            ('grams', 'ounces'): 0.035274,
-            ('ounces', 'grams'): 28.3495,
-            ('grams', 'milligrams'): 1000,
-            ('milligrams', 'grams'): 0.001,
-            ('grams', 'micrograms'): 1e6,
-            ('micrograms', 'grams'): 1e-6,
-            ('kilograms', 'stones'): 0.157473,
-            ('stones', 'kilograms'): 6.35029,
-            ('kilograms', 'tons'): 0.001,
-            ('tons', 'kilograms'): 1000,
-            ('grams', 'carats'): 5,
-            ('carats', 'grams'): 0.2,
-            # Add more weight conversions
+            'grams': 1,
+            'kilograms': 1000,
+            'pounds': 453.592,
+            'ounces': 28.3495,
+            'milligrams': 0.001,
+            'micrograms': 1e-6,
+            'decigrams': 0.1,
+            'hectograms': 100,
+            'stones': 6350.29,
+            'tons': 1e6,
+            'carats': 0.2,  # 1 carat = 0.2 grams
+            'troy ounces': 31.1035,  # 1 troy ounce = 31.1035 grams
+            'grains': 0.0647989,  # 1 grain = 0.0647989 grams
+            'pennyweights': 1.55517,  # 1 pennyweight = 1.55517 grams
         },
         'temperature': {
-            ('celsius', 'fahrenheit'): lambda c: (c * 9/5) + 32,
-            ('fahrenheit', 'celsius'): lambda f: (f - 32) * 5/9,
-            ('celsius', 'kelvin'): lambda c: c + 273.15,
-            ('kelvin', 'celsius'): lambda k: k - 273.15,
-            ('fahrenheit', 'kelvin'): lambda f: (f + 459.67) * 5/9,
-            ('kelvin', 'fahrenheit'): lambda k: (k * 9/5) - 459.67,
-            ('celsius', 'rankine'): lambda c: (c + 273.15) * 9/5,
-            ('rankine', 'celsius'): lambda r: (r - 491.67) * 5/9,
-            # Add more temperature conversions
+            # Temperature conversions are special cases handled separately
+            'celsius': ('kelvin', lambda c: c + 273.15, lambda k: k - 273.15),
+            'fahrenheit': ('kelvin', lambda f: (f + 459.67) * 5/9, lambda k: (k * 9/5) - 459.67),
+            'kelvin': ('kelvin', lambda k: k, lambda k: k),  # No conversion needed
+            'rankine': ('kelvin', lambda r: r * 5/9, lambda k: k * 9/5),
         },
         'volume': {
-            ('liters', 'milliliters'): 1000,
-            ('milliliters', 'liters'): 0.001,
-            ('liters', 'gallons'): 0.264172,
-            ('gallons', 'liters'): 3.78541,
-            ('liters', 'cups'): 4.22675,
-            ('cups', 'liters'): 0.236588,
-            ('liters', 'pints'): 2.11338,
-            ('pints', 'liters'): 0.473176,
-            ('liters', 'quarts'): 1.05669,
-            ('quarts', 'liters'): 0.946353,
-            ('cubic meters', 'liters'): 1000,
-            ('liters', 'cubic meters'): 0.001,
-            ('cubic centimeters', 'liters'): 0.001,
-            ('liters', 'cubic centimeters'): 1000,
-            ('cubic inches', 'liters'): 0.0163871,
-            ('liters', 'cubic inches'): 61.0237,
-            # Add more volume conversions
+            'liters': 1,
+            'milliliters': 0.001,
+            'gallons': 3.78541,
+            'cups': 0.236588,
+            'pints': 0.473176,
+            'quarts': 0.946353,
+            'cubic meters': 1000,
+            'cubic centimeters': 0.001,
+            'cubic inches': 0.0163871,
+            'deciliters': 0.1,
+            'hectoliters': 100,
         },
         'data': {
-            ('bytes', 'kilobytes'): 0.001,
-            ('kilobytes', 'bytes'): 1000,
-            ('kilobytes', 'megabytes'): 0.001,
-            ('megabytes', 'kilobytes'): 1000,
-            ('megabytes', 'gigabytes'): 0.001,
-            ('gigabytes', 'megabytes'): 1000,
-            ('gigabytes', 'terabytes'): 0.001,
-            ('terabytes', 'gigabytes'): 1000,
-            ('terabytes', 'petabytes'): 0.001,
-            ('petabytes', 'terabytes'): 1000,
-            ('petabytes', 'exabytes'): 0.001,
-            ('exabytes', 'petabytes'): 1000,
-            ('exabytes', 'zettabytes'): 0.001,
-            ('zettabytes', 'exabytes'): 1000,
-            ('zettabytes', 'yottabytes'): 0.001,
-            ('yottabytes', 'zettabytes'): 1000,
-            # Add more data conversions
+            'bytes': 1,
+            'kilobytes': 1e3,
+            'megabytes': 1e6,
+            'gigabytes': 1e9,
+            'terabytes': 1e12,
+            'petabytes': 1e15,
+            'exabytes': 1e18,
+            'zettabytes': 1e21,
+            'yottabytes': 1e24,
+            'gigabits': 1.25e8,  # 1 gigabit = 125 million bytes
         },
-        # Add more categories and conversions as needed
+        'area': {
+            'square meters': 1,
+            'square kilometers': 1e6,
+            'square miles': 2.59e6,
+            'acres': 4046.86,
+            'hectares': 10000,
+            'square yards': 0.836127,
+            'square feet': 0.092903,
+            'square inches': 0.00064516,
+            'square centimeters': 1e-4,
+            'square millimeters': 1e-6,
+            'square decimeters': 0.01,
+            'square hectometers': 1e4,
+        },
+        'perimeter': {
+            'meters': 1,
+            'kilometers': 1000,
+            'miles': 1609.34,
+            'yards': 0.9144,
+            'feet': 0.3048,
+            'inches': 0.0254,
+            'centimeters': 0.01,
+            'millimeters': 0.001,
+            'decimeters': 0.1,
+            'hectometers': 100,
+        },
+        'logarithmic': {
+            'decibels': 1,
+            'bels': 10,
+            'nepers': 8.68589,  # 1 neper = 8.68589 dB
+            # More logarithmic units can be added here
+        },
+        'sound': {
+            'decibels': 1,
+            'bels': 10,
+            'nepers': 8.68589,  # 1 neper = 8.68589 dB
+            # More sound-related units can be added
+        },
+        'light': {
+            'lumens': 1,
+            'candela': 1 / (4 * 3.14159),  # 1 candela = 1 lumen/sr (steradian)
+            'lux': 1,  # Note: 1 lux = 1 lumen/m^2, but the conversion needs context (surface area)
+            # More light-related units can be added
+        }
     }
 
+    if category not in base_conversions:
+        return "Invalid category."
+
+    if category == 'temperature':
+        from_base = base_conversions[category][from_unit]
+        to_base = base_conversions[category][to_unit]
+        # Convert to base (kelvin) then to the target unit
+        return round(to_base[2](from_base[1](value)), 2)
+
     try:
-        if category in conversion_rates:
-            conversion = conversion_rates[category].get((from_unit, to_unit))
-            if conversion:
-                if callable(conversion):  # For lambda functions (temperature)
-                    return round(conversion(value), 2)
-                return round(value * conversion, 2)
-            else:
-                return "Conversion not supported."
-        else:
-            return "Invalid category."
+        # Convert from the input unit to the base unit (SI)
+        base_value = value * base_conversions[category][from_unit]
+        # Convert from the base unit to the target unit
+        converted_value = base_value / base_conversions[category][to_unit]
+        return round(converted_value, 2)
     except KeyError:
-        return "Invalid conversion."
+        return "Conversion not supported."
+
+@app.route('/age_calculator', methods=['GET', 'POST'])
+def age_calculator():
+    age_details = None
+    total_days = None
+    total_hours = None
+    total_minutes = None
+    total_seconds = None
+    total_months = None
+    format_type = request.form.get('format_type', 'full')
+
+    if request.method == 'POST':
+        try:
+            dob_str = request.form.get('dob')
+            dob = datetime.strptime(dob_str, '%Y-%m-%d')
+            today = datetime.today()
+
+            # Calculate the age
+            age = relativedelta(today, dob)
+            age_details = {
+                'years': age.years,
+                'months': age.months,
+                'days': age.days,
+                'total_days': (today - dob).days,
+                'total_months': age.years * 12 + age.months,
+                'time': today - dob
+            }
+
+            # Calculate total number of days, hours, minutes, seconds, and months
+            total_days = (today - dob).days
+            total_hours = total_days * 24
+            total_minutes = total_hours * 60
+            total_seconds = (today - dob).total_seconds()
+            total_months = age.years * 12 + age.months
+
+            if format_type == 'days':
+                age_details = {
+                    'days': total_days
+                }
+            elif format_type == 'months':
+                age_details = {
+                    'months': total_months
+                }
+            elif format_type == 'time':
+                age_details = {
+                    'time': str(age.years) + " years, " + str(age.months) + " months, " + str(age.days) + " days"
+                }
+            elif format_type == 'hours':
+                age_details = {
+                    'hours': total_hours
+                }
+            elif format_type == 'minutes':
+                age_details = {
+                    'minutes': total_minutes
+                }
+            elif format_type == 'seconds':
+                age_details = {
+                    'seconds': total_seconds
+                }
+            elif format_type == 'full':
+                pass  # Use the full detailed age
+
+        except ValueError:
+            age_details = 'Invalid date format. Please enter a valid date.'
+
+    return render_template('age_calculator.html', age_details=age_details, total_days=total_days, total_hours=total_hours, total_minutes=total_minutes, total_seconds=total_seconds, total_months=total_months, format_type=format_type)
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -414,6 +504,7 @@ def sitemap():
         {'loc': url_for('bmi', _external=True)},
         {'loc': url_for('password_generator', _external=True)},
         {'loc': url_for('unit_converter', _external=True)},
+        {'loc': url_for('age_calculator', _external=True)},
         {'loc': url_for('privacy_policy', _external=True)},
         {'loc': url_for('robots_txt', _external=True)},
         {'loc': url_for('sitemap', _external=True)},
@@ -436,6 +527,11 @@ def robots_txt():
 def all_urls():
     urls = get_urls()
     return render_template('all_urls.html', urls=urls, hashids=hashids)
+
+@app.route('/routes')
+def show_routes():
+    routes = [str(rule) for rule in app.url_map.iter_rules()]
+    return '<br>'.join(routes)
 
 if __name__ == '__main__':
     app.run(debug=True)
