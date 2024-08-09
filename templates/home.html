@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <div class="jumbotron text-center">
         <h1 class="display-4">Welcome to tMLABS India</h1>
-        <p class="lead">Explore our range of software tools designed to simplify your tasks, including URL Shortening, BMI calculation, Password Generator, Unit Converter, Age Calculator, and more to come!</p>
+        <p class="lead">Explore our range of software tools designed to simplify your tasks. From shortening URLs to calculating BMI, generating secure passwords, converting units, and more, we offer a variety of tools to make your life easier.</p>
     </div>
 
     <div class="row mt-4">
@@ -15,7 +15,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">URL Shortener</h5>
-                    <p class="card-text">Shorten and manage your URLs with our efficient and easy-to-use URL Shortener tool.</p>
+                    <p class="card-text">Our URL Shortener tool allows you to shorten and manage your URLs efficiently. This tool is perfect for making long URLs more manageable and easier to share. Save space and enhance your link management with our user-friendly tool.</p>
                     <a href="{{ url_for('url_shortener') }}" class="btn btn-primary">
                         Use URL Shortener <i class="fas fa-link"></i>
                     </a>
@@ -28,7 +28,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">BMI Calculator</h5>
-                    <p class="card-text">Calculate your Body Mass Index (BMI) quickly using various units of measurement.</p>
+                    <p class="card-text">Calculate your Body Mass Index (BMI) quickly and accurately using various units of measurement. This tool is ideal for tracking your fitness progress and ensuring you maintain a healthy weight.</p>
                     <a href="{{ url_for('bmi') }}" class="btn btn-primary">
                         Calculate BMI <i class="fas fa-weight"></i>
                     </a>
@@ -41,7 +41,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Password Generator</h5>
-                    <p class="card-text">Create secure passwords with ease using our customizable Password Generator.</p>
+                    <p class="card-text">Create secure and customizable passwords with our Password Generator. Enhance your online security with strong passwords tailored to your preferences and requirements.</p>
                     <a href="{{ url_for('password_generator') }}" class="btn btn-primary">
                         Generate Password <i class="fas fa-key"></i>
                     </a>
@@ -54,7 +54,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Unit Converter</h5>
-                    <p class="card-text">Convert units of measurement easily with our Unit Converter tool.</p>
+                    <p class="card-text">Convert between different units of measurement effortlessly with our Unit Converter tool. Whether you need to convert length, weight, volume, or temperature, this tool provides quick and accurate conversions.</p>
                     <a href="{{ url_for('unit_converter') }}" class="btn btn-primary">
                         Use Unit Converter <i class="fas fa-exchange-alt"></i>
                     </a>
@@ -67,9 +67,22 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Age Calculator</h5>
-                    <p class="card-text">Calculate your age based on your birthdate.</p>
+                    <p class="card-text">Calculate your age based on your birthdate with our Age Calculator tool. It's useful for keeping track of your age and celebrating milestones.</p>
                     <a href="{{ url_for('age_calculator') }}" class="btn btn-primary">
                         Use Age Calculator <i class="fas fa-calendar-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Compressor Tool -->
+        <div class="col-md-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Image Compressor</h5>
+                    <p class="card-text">Compress your images to reduce file size while maintaining quality with our Image Compressor tool. Ideal for optimizing images for web use and storage, this tool ensures your images load faster without sacrificing quality.</p>
+                    <a href="{{ url_for('image_compressor') }}" class="btn btn-primary">
+                        Use Image Compressor <i class="fas fa-compress-alt"></i>
                     </a>
                 </div>
             </div>

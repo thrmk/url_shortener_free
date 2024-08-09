@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, flash, Response, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, Response, send_from_directory, after_this_request, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashids import Hashids
 from datetime import datetime, timedelta
@@ -8,6 +8,8 @@ import string
 import re
 import requests
 from dateutil.relativedelta import relativedelta
+from PIL import Image
+import os
 
 def get_location_from_ip(ip_address):
     try:
@@ -20,6 +22,17 @@ def get_location_from_ip(ip_address):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a secure key
 hashids = Hashids(min_length=8, salt='your_salt')
+
+
+UPLOAD_FOLDER = 'static/uploads'
+COMPRESSED_FOLDER = 'static/compressed'
+
+# Ensure the upload and compressed folders exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['COMPRESSED_FOLDER'] = COMPRESSED_FOLDER
 
 def calculate_bmi(weight, weight_unit, height, height_unit):
     try:
@@ -495,6 +508,78 @@ def age_calculator():
             age_details = 'Invalid date format. Please enter a valid date.'
 
     return render_template('age_calculator.html', age_details=age_details, total_days=total_days, total_hours=total_hours, total_minutes=total_minutes, total_seconds=total_seconds, total_months=total_months, format_type=format_type)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def compress_image(filepath, output_filename):
+    try:
+        with Image.open(filepath) as img:
+            original_size = os.path.getsize(filepath)
+            original_format = img.format
+
+            # Compress the image
+            compressed_image_path = os.path.join(app.config['COMPRESSED_FOLDER'], output_filename)
+            img.save(compressed_image_path, format=original_format, optimize=True, quality=75)
+
+            # Calculate compression details
+            compressed_size = os.path.getsize(compressed_image_path)
+            compression_percentage = ((original_size - compressed_size) / original_size) * 100
+            original_dimensions = img.size
+            compressed_dimensions = Image.open(compressed_image_path).size
+
+            return compressed_image_path, compression_percentage, original_dimensions, compressed_dimensions
+    except Exception as e:
+        print(f"Error compressing image: {e}")
+        return None, None, None, None
+
+@app.route('/image_compressor', methods=['GET', 'POST'])
+def image_compressor():
+    if request.method == 'POST':
+        if 'image' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['image']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filepath)
+
+            compressed_filepath, compression_percentage, original_dimensions, compressed_dimensions = compress_image(filepath, file.filename)
+
+            if compressed_filepath:
+                flash('Image successfully compressed and saved!')
+                return render_template('image_compressor.html',
+                                       compressed_image=os.path.basename(compressed_filepath),
+                                       compression_percentage=compression_percentage,
+                                       original_dimensions=original_dimensions,
+                                       compressed_dimensions=compressed_dimensions)
+
+    return render_template('image_compressor.html')
+
+@app.route('/download/<filename>')
+def download_file(filename):
+    compressed_path = os.path.join(app.config['COMPRESSED_FOLDER'], filename)
+    if os.path.isfile(compressed_path):
+        os.remove(compressed_path)
+        return send_file(compressed_path, as_attachment=True)
+    else:
+        flash('File not found.')
+        return redirect(url_for('image_compressor'))
+
+@app.route('/delete/<filename>')
+def delete_file(filename):
+    uploaded_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.isfile(uploaded_path):
+        os.remove(uploaded_path)
+    compressed_path = os.path.join(app.config['COMPRESSED_FOLDER'], filename)
+    if os.path.isfile(compressed_path):
+        os.remove(compressed_path)
+    return redirect(url_for('image_compressor'))
 
 @app.route('/sitemap.xml')
 def sitemap():

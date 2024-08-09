@@ -5,6 +5,8 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">Unit Converter</h1>
+    <p>Welcome to the Unit Converter tool! This feature is designed to help you easily convert values between different units of measurement. Whether you're dealing with length, weight, volume, temperature, or other units, this converter provides a simple and efficient way to perform conversions. By selecting the appropriate category and units, you can quickly obtain accurate results for your needs.</p>
+    
     <form method="POST">
         <div class="form-group">
             <label for="value">Value:</label>
@@ -47,6 +49,26 @@
             <strong>Result:</strong> {{ result }}
         </div>
     {% endif %}
+</div>
+
+<div class="container mt-5">
+    <h2>How to Use the Unit Converter</h2>
+    <p>Follow these simple steps to perform unit conversions:</p>
+    <ol>
+        <li><strong>Enter the Value:</strong> Input the numerical value you wish to convert in the 'Value' field.</li>
+        <li><strong>Select the Category:</strong> Choose the category of measurement for which you want to convert the value. Options may include length, weight, volume, temperature, and more.</li>
+        <li><strong>Choose the Units:</strong> Select the 'From Unit' and 'To Unit' based on the category you selected. The available units will automatically update based on the chosen category.</li>
+        <li><strong>Perform Conversion:</strong> Click the 'Convert' button to see the result displayed on the page.</li>
+    </ol>
+    <p>This tool is useful for various applications, such as cooking, travel, scientific calculations, and more. Ensure to choose the correct category and units to get accurate results.</p>
+    
+    <h3>Tips for Using the Unit Converter</h3>
+    <ul>
+        <li><strong>Ensure Accuracy:</strong> Double-check the value and units you input to avoid errors in conversion.</li>
+        <li><strong>Select Correct Units:</strong> Be mindful of the unit categories and options available to ensure accurate conversions.</li>
+        <li><strong>Check for Limits:</strong> Be aware of any limitations or precision issues with very large or small values.</li>
+        <li><strong>Verify Results:</strong> If the result seems incorrect, verify your inputs and try again. For critical calculations, consider cross-checking with another reliable converter.</li>
+    </ul>
 </div>
 
 <script>

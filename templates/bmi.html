@@ -3,6 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2>BMI Calculator</h2>
+    <p>The Body Mass Index (BMI) is a simple calculation used to assess your body weight relative to your height. It helps you understand whether you're within a healthy weight range, underweight, overweight, or obese. By using this BMI calculator, you can quickly determine your BMI score and gain insights into your overall health status. Whether you're embarking on a new fitness journey or monitoring your health progress, knowing your BMI can be an essential tool for setting and achieving your health goals. Try it now and see where you stand!</p>
     <form method="POST">
         <div class="form-group">
             <label for="weight">Weight:</label>
@@ -30,5 +31,45 @@
         <p>Category: {{ category }}</p>
     </div>
     {% endif %}
+</div>
+
+<div class="container mt-5">
+    <h3>Understanding Your BMI</h3>
+    <p>BMI is a widely used measure to understand if your weight is in a healthy range compared to your height. While BMI is a useful starting point, it doesn't consider muscle mass, bone density, or overall body composition. Therefore, it's essential to use BMI as one part of a more comprehensive health assessment. Regular exercise, a balanced diet, and consulting with healthcare professionals can help you achieve and maintain a healthy lifestyle.</p>
+    
+    <h3>How BMI is Calculated</h3>
+    <p>BMI is calculated using the following formula:</p>
+    <ul>
+        <li><strong>Metric System:</strong> BMI = weight (kg) / (height (m))<sup>2</sup></li>
+        <li><strong>Imperial System:</strong> BMI = (weight (lbs) / (height (in))<sup>2</sup>) x 703</li>
+    </ul>
+    <p>For example, if you weigh 70 kilograms and are 1.75 meters tall, your BMI is calculated as follows:</p>
+    <p>BMI = 70 / (1.75 x 1.75) = 22.86</p>
+    <p>If you weigh 154 pounds and are 68 inches tall, your BMI is:</p>
+    <p>BMI = (154 / (68 x 68)) x 703 = 23.41</p>
+    <p>These calculations help determine your weight status and provide a guideline for understanding your overall health. Always consider other factors such as muscle mass, bone density, and overall body composition when evaluating your BMI.</p>
+
+    <h3>BMI Categories</h3>
+    <p>Here is a general BMI scale to help you understand your result:</p>
+    <ul>
+        <li><strong>Underweight:</strong> BMI &lt; 18.5</li>
+        <li><strong>Normal weight:</strong> 18.5 ≤ BMI &lt; 24.9</li>
+        <li><strong>Overweight:</strong> 25 ≤ BMI &lt; 29.9</li>
+        <li><strong>Obesity:</strong> BMI ≥ 30</li>
+    </ul>
+</div>
+
+<div class="container mt-5">
+    <h3>Health and Exercise Tips</h3>
+    <p>Whether you're aiming to lose weight, gain muscle, or maintain a healthy lifestyle, here are some tips to help you achieve your health and fitness goals:</p>
+    <ul>
+        <li><strong>Balanced Diet:</strong> Eat a variety of nutrient-dense foods including fruits, vegetables, whole grains, lean proteins, and healthy fats. Avoid excessive intake of processed foods, sugars, and unhealthy fats.</li>
+        <li><strong>Regular Exercise:</strong> Engage in a mix of aerobic exercises (like walking, running, or swimming) and strength training (like weight lifting or bodyweight exercises) at least 150 minutes per week.</li>
+        <li><strong>Stay Hydrated:</strong> Drink plenty of water throughout the day. Proper hydration supports overall health and aids in digestion and energy levels.</li>
+        <li><strong>Get Adequate Sleep:</strong> Aim for 7-9 hours of quality sleep each night. Good sleep is essential for recovery, mental health, and maintaining a healthy weight.</li>
+        <li><strong>Set Realistic Goals:</strong> Set achievable and specific health and fitness goals. Track your progress and celebrate small victories to stay motivated.</li>
+        <li><strong>Consult Healthcare Professionals:</strong> Regular check-ups with healthcare providers can help monitor your health and make necessary adjustments to your diet and exercise routine.</li>
+        <li><strong>Stay Active Throughout the Day:</strong> Incorporate physical activity into your daily routine, such as taking the stairs, walking or cycling instead of driving, and stretching during breaks.</li>
+    </ul>
 </div>
 {% endblock %}

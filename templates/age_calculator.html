@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container mt-5">
     <h1>Age Calculator</h1>
+    <p>Are you curious about your exact age or planning for a special milestone? Our Age Calculator is here to help! By simply entering your date of birth, you can discover your age in precise terms. Whether you want to know the total number of days you've lived or how many hours until your next birthday, our tool provides detailed and accurate calculations. It's perfect for planning events, understanding timelines, or just for fun! Try it now and find out how many moments you've experienced in your unique journey through time.</p>
     <form method="POST" action="{{ url_for('age_calculator') }}">
         <div class="form-group">
             <label for="dob">Enter your Date of Birth:</label>
@@ -59,6 +60,35 @@
             {% endif %}
         </div>
     {% endif %}
+</div>
+
+<div class="container mt-5">
+    <h2>How Age is Calculated</h2>
+    <p>Age calculation involves determining the difference between the current date and your date of birth. Here are some key components of how age is calculated:</p>
+    <ul>
+        <li><strong>Years:</strong> Calculated by subtracting the year of birth from the current year. If your birthday hasn't occurred yet this year, one year is subtracted from the total.</li>
+        <li><strong>Months:</strong> The difference in months is determined by comparing the birth month to the current month. Adjustments are made if the current day is earlier than the birth day.</li>
+        <li><strong>Days:</strong> Calculated by counting the days from the last birthday or the last month until the current date.</li>
+        <li><strong>Total Days, Hours, Minutes, Seconds:</strong> These are calculated by multiplying the total years, months, and days by the corresponding number of days, hours, minutes, or seconds.</li>
+    </ul>
+    <p>For example, if you were born on January 1, 1990, and today's date is August 9, 2024, your age would be 34 years, 7 months, and 8 days.</p>
+    <p>Using the above information, you can accurately determine your age in various formats. This calculation is beneficial for various purposes, including planning and reflecting on life's milestones.</p>
+</div>
+
+<div class="container mt-5">
+    <h2>Beauty and Anti-Aging Tips</h2>
+    <p>Maintaining a youthful appearance and healthy skin is important at any age. Here are some tips to help you look and feel your best:</p>
+    <ul>
+        <li><strong>Hydrate:</strong> Drink plenty of water to keep your skin hydrated and flush out toxins. Proper hydration can help reduce the appearance of fine lines and wrinkles.</li>
+        <li><strong>Healthy Diet:</strong> Eat a balanced diet rich in antioxidants, vitamins, and minerals. Foods like berries, nuts, and leafy greens can support skin health and combat signs of aging.</li>
+        <li><strong>Sun Protection:</strong> Apply sunscreen with SPF 30 or higher daily, even on cloudy days. UV rays can cause premature aging, including wrinkles and dark spots.</li>
+        <li><strong>Moisturize:</strong> Use a good moisturizer suited to your skin type to keep your skin soft and supple. Look for ingredients like hyaluronic acid and ceramides for added hydration.</li>
+        <li><strong>Regular Exercise:</strong> Engage in regular physical activity to improve blood circulation and support overall skin health. Exercise can also help manage stress, which impacts the appearance of your skin.</li>
+        <li><strong>Get Quality Sleep:</strong> Aim for 7-9 hours of sleep each night. Adequate rest is essential for skin repair and regeneration.</li>
+        <li><strong>Skin Care Routine:</strong> Follow a consistent skincare routine that includes cleansing, exfoliating, and moisturizing. Consider incorporating products with retinoids, peptides, and antioxidants for added benefits.</li>
+        <li><strong>Reduce Stress:</strong> Practice stress-reducing activities such as meditation, yoga, or deep breathing exercises. Chronic stress can contribute to premature aging and skin issues.</li>
+        <li><strong>Avoid Smoking:</strong> Smoking accelerates the aging process and can lead to wrinkles and a dull complexion. Quitting smoking can improve the appearance of your skin and overall health.</li>
+    </ul>
 </div>
 
 <style>

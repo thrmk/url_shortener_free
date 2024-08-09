@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Image Compressor{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Image Compressor</h1>
+    <p class="text-center">Welcome to our Image Compressor tool! Whether you need to reduce file size for faster uploads or optimize images for your website, our tool is here to help. Simply upload your image, and we'll handle the rest.</p>
+    
+    <form method="POST" action="{{ url_for('image_compressor') }}" enctype="multipart/form-data" class="text-center">
+        <div class="form-group mb-3">
+            <label for="image" class="form-label">Upload Image:</label>
+            <input type="file" class="form-control-file" id="image" name="image" required>
+            <small id="imageHelp" class="form-text text-muted">Supported formats: JPEG, PNG. Max file size: 10 MB.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Compress Image</button>
+    </form>
+
+    {% if compressed_image %}
+        <div class="mt-4 text-center">
+            <h3>Compressed Image:</h3>
+            <img src="{{ url_for('static', filename='compressed/' + compressed_image) }}" class="img-fluid" alt="Compressed Image">
+            <p>Compression Percentage: {{ compression_percentage|round(2) }}%</p>
+            <p>Original Dimensions: {{ original_dimensions[0] }} x {{ original_dimensions[1] }}</p>
+            <p>Compressed Dimensions: {{ compressed_dimensions[0] }} x {{ compressed_dimensions[1] }}</p>
+            <a href="{{ url_for('download_file', filename=compressed_image) }}" class="btn btn-success">Download Compressed Image</a>
+            <a href="{{ url_for('delete_file', filename=compressed_image) }}" class="btn btn-danger">Delete Files</a>
+        </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-success mt-3 text-center">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+</div>
+
+<div class="container mt-5">
+    <h2>How the Image Compressor Works</h2>
+    <p>Our Image Compressor tool reduces the file size of your images while maintaining their quality. The process involves:</p>
+    <ul>
+        <li>**Uploading your image**: Select an image file from your device.</li>
+        <li>**Compression**: The tool uses advanced algorithms to reduce the file size by removing unnecessary data while preserving image quality.</li>
+        <li>**Download**: After compression, you can download the optimized image for your needs.</li>
+    </ul>
+    <p>This tool supports JPEG and PNG formats. The maximum file size is 10 MB. For larger files or other formats, consider using dedicated image editing software.</p>
+
+    <h2>Tips for Best Results</h2>
+    <ul>
+        <li>**Choose the right format**: JPEG is best for photographs, while PNG is better for images with transparency.</li>
+        <li>**Check image quality**: After compression, verify that the image quality meets your needs. Some compression may affect image clarity.</li>
+        <li>**Use appropriate dimensions**: Resize images to fit your intended use to avoid unnecessary file size.</li>
+    </ul>
+
+    <h2>Understanding Image Compression</h2>
+    <p>Image compression reduces the file size by removing redundant data. There are two types of compression:</p>
+    <ul>
+        <li>**Lossy Compression**: Removes some image data, which can affect quality but significantly reduces file size. JPEG uses lossy compression.</li>
+        <li>**Lossless Compression**: Retains all image data, preserving quality while reducing file size to a lesser extent. PNG uses lossless compression.</li>
+    </ul>
+    <p>Choosing the right type of compression depends on your needs for file size and image quality.</p>
+</div>
+{% endblock %}
